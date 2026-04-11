@@ -1,0 +1,22 @@
+name = "tpmos"
+compatibility_date = "2024-09-23"
+pages_build_output_dir = "./out"
+
+# D1 binding for the TPMOS database.
+# Local: created with `wrangler d1 create tpmos-local`
+# Prod:  created with `wrangler d1 create tpmos-prod`
+# Replace database_id below after creating the prod database.
+[[d1_databases]]
+binding = "DB"
+database_name = "tpmos-prod"
+database_id = "REPLACE_AFTER_WRANGLER_D1_CREATE"
+migrations_dir = "./migrations"
+
+# Workers AI binding for AI features (epic drafting, DoD lint, interview synthesis).
+# Free tier: 10K Neurons/day. Swap provider via AI_PROVIDER env var.
+[ai]
+binding = "AI"
+
+[vars]
+ENV = "production"
+AI_PROVIDER = "workers-ai"
