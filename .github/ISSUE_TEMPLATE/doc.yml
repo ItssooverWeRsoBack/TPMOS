@@ -1,0 +1,17 @@
+name: Documentation
+description: Documentation additions or updates
+labels: ["type:doc"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What needs to be documented?
+    validations:
+      required: true
+  - type: input
+    id: file
+    attributes:
+      label: Target file
+      placeholder: "docs/EXAMPLE.md"
+    validations:
+      required: false

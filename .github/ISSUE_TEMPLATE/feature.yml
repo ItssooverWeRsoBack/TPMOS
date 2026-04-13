@@ -1,0 +1,57 @@
+name: Feature
+description: A new feature or surface implementation
+labels: ["type:feature"]
+body:
+  - type: input
+    id: task-id
+    attributes:
+      label: Task ID
+      description: "Milestone task reference (e.g., M5.4)"
+      placeholder: "Mx.y"
+    validations:
+      required: false
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Surface
+      description: Which of the 15 surfaces does this affect?
+      options:
+        - "01 Auth"
+        - "02 Home"
+        - "03 Teams Directory"
+        - "04 Team Detail"
+        - "05 Quarterly Planning"
+        - "06 Epic Detail"
+        - "07 Quarter Management"
+        - "08 Leadership Goals (Phase 2)"
+        - "09 Initiative Mapping (Phase 2)"
+        - "10 Executive Visualizer (Phase 2)"
+        - "11 TPM Intake"
+        - "12 Reporting/Export (Phase 2)"
+        - "13 Capacity"
+        - "14 Risks Feed"
+        - "15 Admin"
+        - "Cross-cutting / infrastructure"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What needs to be built?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: How do we know this is done?
+    validations:
+      required: false
+  - type: textarea
+    id: files
+    attributes:
+      label: Files to create/modify
+      description: List the expected file paths
+    validations:
+      required: false
