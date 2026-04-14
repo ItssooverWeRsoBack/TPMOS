@@ -153,3 +153,19 @@
 - Local dev remains frictionless
 - Any future LLM session must respect this gate
 **Reversibility:** High — gate is one line of code.
+**Reversibility:** High — gate is one line of code.
+
+---
+
+## DEC-0014 — Flat routes with query params, no dynamic [slug] segments
+**Date:** 2026-04-13
+**Status:** Accepted
+**Context:** Next.js `output: "export"` requires `generateStaticParams()` for dynamic `[slug]` routes. TPMOS slugs come from a D1 database that doesn't exist at build time, making static generation impossible. Options: (1) flatten routes and use query params, (2) add SPA fallback routing on Cloudflare, (3) eject from static export.
+**Decision:** Flatten all routes. Remove `[slug]`, `[epicId]`, `[interviewId]`, `[goalId]` path segments. Use query params (`?team=slug&quarter=id`) for dynamic context. Team/epic/interview detail views render as sliding panels within their parent page (Linear-style), not as separate routes.
+**Consequences:**
+- All 17 routes are statically exportable — build passes cleanly
+- URL structure is `/plan?team=platform&quarter=2026Q2` instead of `/teams/platform/plan`
+- Detail views are panel-based (actually better UX — stays in context)
+- No SPA fallback routing needed on Cloudflare
+- Phase 2 could optionally re-add path segments via SSR migration, but likely unnecessary
+**Reversibility:** Medium — route structure is set early, but the components are the same either way.
