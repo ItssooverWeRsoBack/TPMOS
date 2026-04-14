@@ -1,114 +1,113 @@
 # TPMOS Build Status
 
-> This file is the single source of truth for build progress. It is updated after every meaningful task. A new LLM session reads this file first, before any other docs.
+> This file is the single source of truth for build progress.
 
-**Last updated:** 2026-04-13
+**Last updated:** 2026-04-14
 **Last actor:** claude-opus-4-6
-**Current phase:** MVP
-**Current milestone:** M3 — Teams + Quarters + Admin + Home
-**Resume here:** Task M3.1 (team API handlers) — see `docs/IMPLEMENTATION_PLAN_MVP.md` § M3
+**Current phase:** MVP COMPLETE
+**Resume here:** Phase 2 — see `docs/IMPLEMENTATION_PLAN_PHASE2.md`
 
 ## Quick links for new sessions
 
-1. **Start here:** [`docs/AGENTS.md`](docs/AGENTS.md) — briefing for any LLM picking up the project
-2. **Plan:** [`docs/IMPLEMENTATION_PLAN_MVP.md`](docs/IMPLEMENTATION_PLAN_MVP.md) — milestones and task IDs
-3. **Decisions:** [`docs/DECISIONS.md`](docs/DECISIONS.md) — append-only architecture log
-4. **Product spec:** [`docs/PRD.md`](docs/PRD.md)
-5. **Architecture spec:** [`docs/ARD.md`](docs/ARD.md)
-6. **API design:** [`docs/API_DESIGN.md`](docs/API_DESIGN.md) — endpoint catalog and rationale
-7. **Data model:** [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md)
-8. **AI integration:** [`docs/AI_INTEGRATION.md`](docs/AI_INTEGRATION.md)
-9. **Local dev:** [`docs/DEV.md`](docs/DEV.md)
-10. **Deploy:** [`docs/DEPLOY.md`](docs/DEPLOY.md)
+1. **Start here:** [`docs/AGENTS.md`](docs/AGENTS.md)
+2. **Phase 2 plan:** [`docs/IMPLEMENTATION_PLAN_PHASE2.md`](docs/IMPLEMENTATION_PLAN_PHASE2.md)
+3. **MVP plan (reference):** [`docs/IMPLEMENTATION_PLAN_MVP.md`](docs/IMPLEMENTATION_PLAN_MVP.md)
+4. **Decisions:** [`docs/DECISIONS.md`](docs/DECISIONS.md)
+5. **Product spec:** [`docs/PRD.md`](docs/PRD.md)
+6. **Architecture spec:** [`docs/ARD.md`](docs/ARD.md)
+7. **API design:** [`docs/API_DESIGN.md`](docs/API_DESIGN.md)
+8. **Data model:** [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md)
+9. **AI integration:** [`docs/AI_INTEGRATION.md`](docs/AI_INTEGRATION.md)
 
 ## Surfaces (15 total)
 
-| # | Surface | State | Last touched | Owner doc |
-|---|---|---|---|---|
-| 1 | Auth / Login | ⏳ planned | M1 | PRD § FR-1 |
-| 2 | Home (lite) | ⏳ planned | M3 | PRD § W1-W5 |
-| 3 | Teams Directory | ⏳ planned | M3 | PRD § FR-2 |
-| 4 | Team Detail | ⏳ planned | M3 | PRD § FR-2 |
-| 5 | Quarterly Planning | ⏳ planned | M5/M6 | PRD § FR-5, FR-7 |
-| 6 | Epic Detail | ⏳ planned | M5 | PRD § FR-5, FR-6 |
-| 7 | Quarter Management | ⏳ planned | M3 | PRD § FR-3 |
-| 8 | Leadership Goals | 📦 placeholder | M1 | PRD § FR-12 (Phase 2) |
-| 9 | Initiative Mapping | 📦 placeholder | M1 | PRD § FR-12 (Phase 2) |
-| 10 | Executive Visualizer | 📦 placeholder | M1 | PRD § FR-13 (Phase 2) |
-| 11 | TPM Intake | ⏳ planned | M10 | PRD § FR-11 |
-| 12 | Reporting/Export | 📦 placeholder | M1 | PRD § FR-14 (Phase 2) |
-| 13 | Capacity | ⏳ planned | M4 | PRD § FR-4 |
-| 14 | Risks Feed | ⏳ planned | M7 | PRD § FR-8 |
-| 15 | Admin | ⏳ planned | M3 | PRD § FR-15 |
+| # | Surface | State | Milestone |
+|---|---|---|---|
+| 1 | Auth / Login | ✅ shipped | M1 |
+| 2 | Home | ✅ shipped | M3 |
+| 3 | Teams Directory | ✅ shipped | M3 |
+| 4 | Team Detail (inline in Teams) | ✅ shipped | M3 |
+| 5 | Quarterly Planning (Planner) | ✅ shipped | M5+M6 |
+| 6 | Epic Detail (inline in Planner) | ✅ shipped | M5 |
+| 7 | Quarter Management | ✅ shipped | M3 |
+| 8 | Leadership Goals | 📦 placeholder | Phase 2 |
+| 9 | Initiative Mapping | 📦 placeholder | Phase 2 |
+| 10 | Executive Visualizer | 📦 placeholder | Phase 2 |
+| 11 | TPM Intake | ✅ shipped | M10 |
+| 12 | Reporting/Export | 📦 placeholder | Phase 2 |
+| 13 | Capacity | ✅ shipped | M4 |
+| 14 | Risks Feed | ✅ shipped | M7 |
+| 15 | Admin | ✅ shipped | M3 |
 
-**Legend:** ✅ shipped | 🚧 in progress | ⏳ planned | 📦 placeholder | ❌ blocked
+**11 functional + 4 placeholders = 15 total IA locked**
 
-## Milestones
+## Milestones — ALL COMPLETE
 
-- [x] **M0 — Bootstrap, docs, CI** ✅
-  - [x] M0.1 git init + remote
-  - [x] M0.2 Next.js scaffold
-  - [x] M0.3 Design tokens (indigo accent, oklch, status colors)
-  - [x] M0.4 wrangler.toml with D1 + AI bindings
-  - [x] M0.5 All canonical docs (PRD, ARD, IMPL_PLAN, DECISIONS, DATA_MODEL, AI_INTEGRATION, DEV, DEPLOY, AGENTS, API_DESIGN)
-  - [x] M0.6 GitHub issue templates (4) + 40 labels (project board deferred to manual)
-  - [x] M0.7 Vitest config + smoke test passing
-  - [x] M0.8 GitHub Actions CI (lint + typecheck + test + build) — green
-  - [x] M0.9 Cloudflare Pages project (created by owner, builds succeeding)
-  - [x] M0.10 First deploy verified — Pages build green
-- [x] **M1 — Auth + AppShell + 15 route placeholders** ✅
-  - [x] M1.1-M1.2 Pages Functions middleware + /me endpoint
-  - [x] M1.3-M1.4 useCurrentUser hook + AppShell (sidebar, top-bar, role badge)
-  - [x] M1.5-M1.8 All 17 routes (13 functional stubs + 4 Phase 2 placeholders), PlaceholderSurface, role-aware nav
-  - [x] M1.9 Dev login route (hard-gated to ENV=local)
-  - [x] DEC-0014 Flat routes with query params (static export constraint)
-- [x] **M2 — Data layer foundation** ✅
-  - [x] M2.1-M2.2 D1 schema (0001_init.sql) + client helper
-  - [x] M2.3-M2.4 Query files (users, teams, quarters) + Zod schemas
-  - [x] M2.5 can() permission helper (108 tests, full matrix coverage)
-  - [x] M2.6-M2.9 Real D1 middleware, API wrappers, seed.sql
-- [ ] **M3 — Teams + Quarters + Admin + Home** (next)
-- [ ] M4 — Capacity planning
-- [ ] M5 — Epics + Voting (WSJF)
-- [ ] M6 — Planner board (above/below the line, dnd-kit)
-- [ ] M7 — Status tracking + Risks feed
-- [ ] M8 — Carry-forward + Quarter close
-- [ ] M9 — AI hooks A1 + A2 (epic drafting + DoD lint)
-- [ ] M10 — TPM Intake + AI hooks B1 + B2
-- [ ] M11 — Polish + Seed + Demo + Final QA
+- [x] **M0** — Bootstrap, docs, CI
+- [x] **M1** — Auth + AppShell + 15 route placeholders
+- [x] **M2** — Data layer (D1 schema, queries, can() — 108 tests)
+- [x] **M3** — Teams + Quarters + Admin + Home
+- [x] **M4** — Capacity planning (domain: 18 tests)
+- [x] **M5** — Epics + Voting + WSJF (domain: 17 tests)
+- [x] **M6** — Planner board with dnd-kit (domain: 17 tests)
+- [x] **M7** — Status tracking + Risks feed (domain: 12 tests)
+- [x] **M8** — Carry-forward + Quarter close (domain: 12 tests)
+- [x] **M9** — AI hooks A1+A2 (epic drafting + DoD lint — 10 tests)
+- [x] **M10** — TPM Intake + AI B1+B2 (synthesis + clustering)
+- [x] **M11** — Polish + Seed + Demo
 
-## Active task
+## Stats
 
-**M3.1** — Build team API handlers (GET/POST/PATCH/DELETE /api/tpmos/teams)
-- Files: `functions/api/tpmos/teams/index.ts`, `functions/api/tpmos/teams/[teamId].ts`
-- Uses query helpers from M2, can() for authorization
-- Spec: `docs/IMPLEMENTATION_PLAN_MVP.md` § M3
+| Metric | Count |
+|---|---|
+| Files | ~165 |
+| Tests | 194 |
+| Migrations | 5 |
+| API endpoints | 24 |
+| AI hooks | 4 (A1, A2, B1, B2) |
+| Domain functions | 5 (capacity, wsjf, planner-line, progress, carry-forward) |
+| Decisions logged | 14 |
+| Docs | 12 |
 
-## Blocked
+## What's shipped
 
-(none)
+### Planning Loop (end-to-end)
+- Teams + members CRUD with role-aware permissions
+- Quarter lifecycle: planning → active (lock) → closed
+- Capacity planning: member-weeks math, overhead deductions, capacity bar
+- Epics CRUD with optimistic concurrency (version + If-Match)
+- WSJF voting: 3 dimensions (1-10), per-dimension variance, consensus heatmap
+- Drag-and-drop above/below-the-line planner with live capacity tracking
+- Status tracking: 5 states + at-risk + percent complete + progress vs time bar
+- Carry-forward with provenance tracking
+- Cross-team risks feed
 
-## Next 3 actions
+### AI Integration
+- Provider abstraction: Workers AI (free) ↔ Anthropic Claude Haiku ↔ none
+- A1: Epic description + DoD drafting from title
+- A2: DoD quality lint (regex fast-check + LLM deep check)
+- B1: Interview synthesis (scope, challenges, themes, actions)
+- B2: Theme clustering across interviews
 
-1. M3.1 — Team API handlers (CRUD)
-2. M3.2 — Team member API handlers
-3. M3.5 — TeamCard, TeamForm, MemberList components
+### TPM Intake
+- Structured 4-question interviews
+- One-click AI synthesis
+- Theme cluster visualization (bubble chart + list)
 
-## Recent decisions (full log in `docs/DECISIONS.md`)
+### Infrastructure
+- Cloudflare Pages Functions + D1 backend
+- Auth: Cloudflare Access (prod) + hard-gated dev cookie (local)
+- 194 tests (domain logic 100% branch coverage)
+- CI: lint + typecheck + test + build on every push
+- 12 canonical docs (PRD, ARD, API_DESIGN, DATA_MODEL, AI_INTEGRATION, etc.)
+- LLM-resumable tracking (STATUS.md + AGENTS.md + DECISIONS.md)
 
-- 2026-04-13 DEC-0013 No API versioning for MVP; URL prefix if external consumers appear
-- 2026-04-13 DEC-0012 REST chosen over tRPC/GraphQL — justified by static-export constraint
-- 2026-04-11 DEC-0011 Public repo: dev login route hard-gated to ENV=local
-- 2026-04-11 DEC-0010 Workers AI default, Anthropic Claude Haiku via env-var swap
-- 2026-04-11 DEC-0009 All 15 surfaces scaffolded; 11 functional + 4 placeholders
+## What's next (Phase 2)
 
-## How to update this file
-
-After completing any meaningful task:
-
-1. Update `Last updated`, `Last actor`
-2. Update `Current milestone` and `Resume here`
-3. Tick the completed task checkbox under `Milestones`
-4. Update the `Active task`, `Blocked`, and `Next 3 actions` sections
-5. If a decision was made, append it to `docs/DECISIONS.md` and add the line here
-6. Commit with message format: `Mx.y: <description>`
+See [`docs/IMPLEMENTATION_PLAN_PHASE2.md`](docs/IMPLEMENTATION_PLAN_PHASE2.md):
+1. Leadership Goals page
+2. Initiative/Product Mapping with gap detection
+3. Executive Dashboard with rollups
+4. Reporting/Export with AI narrative
+5. Audit log UI, improved home, command palette search
+6. Integration scaffolding (GitHub, Linear, Slack)

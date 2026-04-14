@@ -1,0 +1,13 @@
+# Copy to .dev.vars for local development
+# .dev.vars is gitignored and never committed
+
+ENV=local
+AI_PROVIDER=none
+AUTH_SECRET=dev-secret-not-for-production
+
+# Uncomment to enable Workers AI locally (requires wrangler login)
+# AI_PROVIDER=workers-ai
+
+# Uncomment to use Anthropic Claude instead of Workers AI
+# AI_PROVIDER=anthropic
+# ANTHROPIC_API_KEY=sk-ant-...
