@@ -5,14 +5,15 @@
  * User is attached by _middleware.ts from D1.
  */
 
+import { getAuth } from "../../_lib/auth/context";
+
 interface Env {
   DB: D1Database;
   ENV: string;
 }
 
 export const onRequestGet: PagesFunction<Env> = async (context) => {
-  const user = context.data.user;
-  const userTeamIds = context.data.userTeamIds ?? [];
+  const { user, userTeamIds } = getAuth(context);
 
   if (!user) {
     return Response.json(
