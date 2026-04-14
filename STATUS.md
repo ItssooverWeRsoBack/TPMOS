@@ -5,8 +5,8 @@
 **Last updated:** 2026-04-13
 **Last actor:** claude-opus-4-6
 **Current phase:** MVP
-**Current milestone:** M1 — Auth + AppShell + 15 route placeholders
-**Resume here:** Task M1.1 (Pages Functions middleware) — see `docs/IMPLEMENTATION_PLAN_MVP.md` § M1
+**Current milestone:** M3 — Teams + Quarters + Admin + Home
+**Resume here:** Task M3.1 (team API handlers) — see `docs/IMPLEMENTATION_PLAN_MVP.md` § M3
 
 ## Quick links for new sessions
 
@@ -56,9 +56,18 @@
   - [x] M0.8 GitHub Actions CI (lint + typecheck + test + build) — green
   - [x] M0.9 Cloudflare Pages project (created by owner, builds succeeding)
   - [x] M0.10 First deploy verified — Pages build green
-- [ ] **M1 — Auth + AppShell + 15 route placeholders** (next)
-- [ ] M2 — Data layer foundation (D1 schema, queries, can() helper)
-- [ ] M3 — Teams + Quarters + Admin + Home
+- [x] **M1 — Auth + AppShell + 15 route placeholders** ✅
+  - [x] M1.1-M1.2 Pages Functions middleware + /me endpoint
+  - [x] M1.3-M1.4 useCurrentUser hook + AppShell (sidebar, top-bar, role badge)
+  - [x] M1.5-M1.8 All 17 routes (13 functional stubs + 4 Phase 2 placeholders), PlaceholderSurface, role-aware nav
+  - [x] M1.9 Dev login route (hard-gated to ENV=local)
+  - [x] DEC-0014 Flat routes with query params (static export constraint)
+- [x] **M2 — Data layer foundation** ✅
+  - [x] M2.1-M2.2 D1 schema (0001_init.sql) + client helper
+  - [x] M2.3-M2.4 Query files (users, teams, quarters) + Zod schemas
+  - [x] M2.5 can() permission helper (108 tests, full matrix coverage)
+  - [x] M2.6-M2.9 Real D1 middleware, API wrappers, seed.sql
+- [ ] **M3 — Teams + Quarters + Admin + Home** (next)
 - [ ] M4 — Capacity planning
 - [ ] M5 — Epics + Voting (WSJF)
 - [ ] M6 — Planner board (above/below the line, dnd-kit)
@@ -70,12 +79,10 @@
 
 ## Active task
 
-**M1.1** — Build Pages Functions middleware (`_middleware.ts`)
-- File: `functions/api/tpmos/_middleware.ts`
-- Reads Cf-Access-Authenticated-User-Email (prod) or HMAC dev cookie (local)
-- Loads user from D1, attaches to context.data.user, rejects 401
-- Spec: `docs/IMPLEMENTATION_PLAN_MVP.md` § M1.1
-- Depends on: M2 for real user lookup (use hardcoded user until M2)
+**M3.1** — Build team API handlers (GET/POST/PATCH/DELETE /api/tpmos/teams)
+- Files: `functions/api/tpmos/teams/index.ts`, `functions/api/tpmos/teams/[teamId].ts`
+- Uses query helpers from M2, can() for authorization
+- Spec: `docs/IMPLEMENTATION_PLAN_MVP.md` § M3
 
 ## Blocked
 
@@ -83,9 +90,9 @@
 
 ## Next 3 actions
 
-1. M1.1 — Pages Functions middleware (auth boundary)
-2. M1.2 — GET /api/tpmos/me endpoint
-3. M1.4 — Build TPMOS AppShell (sidebar, top-bar, command palette)
+1. M3.1 — Team API handlers (CRUD)
+2. M3.2 — Team member API handlers
+3. M3.5 — TeamCard, TeamForm, MemberList components
 
 ## Recent decisions (full log in `docs/DECISIONS.md`)
 
