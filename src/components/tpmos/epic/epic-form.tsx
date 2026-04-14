@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import type { CreateEpicInput } from "@/lib/tpmos/schemas/epic";
+import { DraftButton } from "@/components/tpmos/ai/draft-button";
+import { DodLintBadge } from "@/components/tpmos/ai/dod-lint-badge";
 
 interface EpicFormProps {
   teamId: string;
@@ -41,6 +43,14 @@ export function EpicForm({ teamId, quarterId, onSubmit, onCancel, isLoading }: E
           required
           className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
         />
+        <DraftButton
+          title={title}
+          onAccept={(desc, dodDraft) => {
+            setDescription(desc);
+            setDod(dodDraft);
+          }}
+          disabled={!title.trim()}
+        />
       </div>
 
       <div className="space-y-1.5">
@@ -63,6 +73,7 @@ export function EpicForm({ teamId, quarterId, onSubmit, onCancel, isLoading }: E
           rows={2}
           className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
         />
+        {dod && <DodLintBadge definitionOfDone={dod} />}
       </div>
 
       <div className="space-y-1.5">
