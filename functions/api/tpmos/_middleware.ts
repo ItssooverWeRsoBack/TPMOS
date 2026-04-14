@@ -3,13 +3,14 @@
  *
  * Responsibilities:
  * 1. Extract authenticated email (Cloudflare Access or dev cookie)
- * 2. Load user from DB (M2; hardcoded for M1)
+ * 2. Load user from DB, auto-create with role='pending' if new
  * 3. Attach user to context.data.user
  * 4. Reject unauthenticated requests with 401
- * 5. Add CORS headers for same-origin requests
  */
 
-import { getAuthenticatedEmail, getHardcodedUser } from "../../_lib/auth/middleware";
+import { getAuthenticatedEmail } from "../../_lib/auth/middleware";
+import { getUserByEmail, createUser, touchLastSeen, toUserResponse } from "../../_lib/db/queries/users";
+import { getUserTeamIds } from "../../_lib/db/queries/teams";
 
 interface Env {
   DB: D1Database;
@@ -37,19 +38,31 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     );
   }
 
-  // TODO M2: Replace getHardcodedUser with real D1 lookup:
-  // const user = await getUserByEmail(env.DB, email);
-  // if (!user) { auto-create with role='pending' }
-  const user = getHardcodedUser(email);
+  // Load user from D1, auto-create if new
+  let userRow = await getUserByEmail(env.DB, email);
+  if (!userRow) {
+    userRow = await createUser(env.DB, "default", email, "pending");
+    if (!userRow) {
+      return Response.json(
+        { error: { code: "INTERNAL_ERROR", message: "Failed to create user" } },
+        { status: 500 }
+      );
+    }
+  }
 
-  // Attach user to context for downstream handlers
+  // Touch last seen (fire and forget — don't block the request)
+  context.waitUntil(touchLastSeen(env.DB, userRow.id));
+
+  // Load team memberships for authorization
+  const userTeamIds = await getUserTeamIds(env.DB, userRow.id);
+
+  // Attach user + auth context for downstream handlers
+  const user = toUserResponse(userRow);
   context.data.user = user;
+  context.data.userTeamIds = userTeamIds;
 
   // Continue to the route handler
   const response = await next();
-
-  // Add standard headers
-  response.headers.set("X-TPMOS-User", email);
 
   return response;
 };

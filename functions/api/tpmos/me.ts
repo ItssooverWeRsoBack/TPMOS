@@ -1,8 +1,8 @@
 /**
  * GET /api/tpmos/me
  *
- * Returns the authenticated user's profile and role.
- * User is attached by _middleware.ts.
+ * Returns the authenticated user's profile, role, and team memberships.
+ * User is attached by _middleware.ts from D1.
  */
 
 interface Env {
@@ -12,6 +12,7 @@ interface Env {
 
 export const onRequestGet: PagesFunction<Env> = async (context) => {
   const user = context.data.user;
+  const userTeamIds = context.data.userTeamIds ?? [];
 
   if (!user) {
     return Response.json(
@@ -20,5 +21,5 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     );
   }
 
-  return Response.json({ user });
+  return Response.json({ user, teamIds: userTeamIds });
 };
