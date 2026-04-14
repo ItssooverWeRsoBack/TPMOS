@@ -9,7 +9,7 @@ pages_build_output_dir = "./out"
 [[d1_databases]]
 binding = "DB"
 database_name = "tpmos-prod"
-database_id = "REPLACE_AFTER_WRANGLER_D1_CREATE"
+database_id = "4d8bc52f-9b99-406b-a0b3-91e5b3cc4416"
 migrations_dir = "./migrations"
 
 # Workers AI binding for AI features (epic drafting, DoD lint, interview synthesis).
