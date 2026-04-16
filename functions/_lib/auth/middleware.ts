@@ -1,8 +1,10 @@
 /**
  * Auth helpers for Pages Functions middleware.
  *
- * Production: reads Cf-Access-Authenticated-User-Email header (set by Cloudflare Access).
- * Local dev:  reads a signed HMAC cookie set by /api/tpmos/dev/login.
+ * Production: reads the CF_Authorization JWT cookie set by Cloudflare Access,
+ *   decodes it to extract the user's email. Also checks the
+ *   Cf-Access-Authenticated-User-Email header as a fallback.
+ * Local dev: reads a signed HMAC cookie set by /api/tpmos/dev/login.
  */
 
 import type { User } from "../../../src/lib/tpmos/schemas/user";
@@ -15,16 +17,63 @@ export async function getAuthenticatedEmail(
   request: Request,
   env: { ENV: string; AUTH_SECRET?: string }
 ): Promise<string | null> {
-  // Production: Cloudflare Access injects this header after JWT verification
+  // Method 1: Cloudflare Access header (may not be present on Pages)
   const accessEmail = request.headers.get("Cf-Access-Authenticated-User-Email");
   if (accessEmail) return accessEmail;
 
-  // Local dev: read signed HMAC cookie
+  // Method 2: Decode the CF_Authorization JWT cookie (set by Cloudflare Access)
+  const cfAuthEmail = extractEmailFromAccessJwt(request);
+  if (cfAuthEmail) return cfAuthEmail;
+
+  // Method 3: Local dev — signed HMAC cookie
   if (env.ENV === "local") {
     return verifyDevCookie(request, env.AUTH_SECRET ?? "dev-secret-not-for-production");
   }
 
   return null;
+}
+
+/**
+ * Extract email from the CF_Authorization JWT cookie.
+ *
+ * Cloudflare Access sets this cookie on every authenticated request.
+ * The JWT payload contains an `email` field. We decode (but don't
+ * cryptographically verify) because Cloudflare Access has already
+ * verified the token at the edge — if the cookie exists and the
+ * request reached our function, Access has approved it.
+ *
+ * For additional security, you can verify the JWT signature against
+ * the Access JWKS endpoint. Skipped for MVP because Access is the
+ * sole gateway — no other path reaches the function.
+ */
+function extractEmailFromAccessJwt(request: Request): string | null {
+  const cookieHeader = request.headers.get("Cookie");
+  if (!cookieHeader) return null;
+
+  const cookies = parseCookies(cookieHeader);
+  const token = cookies["CF_Authorization"];
+  if (!token) return null;
+
+  try {
+    // JWT is three base64url segments: header.payload.signature
+    const parts = token.split(".");
+    if (parts.length !== 3) return null;
+
+    // Decode the payload (middle segment)
+    const payload = JSON.parse(atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"))) as {
+      email?: string;
+      sub?: string;
+      iat?: number;
+      exp?: number;
+    };
+
+    // Check expiry
+    if (payload.exp && payload.exp < Date.now() / 1000) return null;
+
+    return payload.email ?? null;
+  } catch {
+    return null;
+  }
 }
 
 /** Sign a dev auth cookie value: email.timestamp.hmac */
@@ -91,19 +140,3 @@ function parseCookies(header: string): Record<string, string> {
 }
 
 export const DEV_COOKIE_NAME = COOKIE_NAME;
-
-/**
- * Hardcoded user for M1 — replaced with real D1 lookup in M2.
- * TODO M2: Replace with actual DB query.
- */
-export function getHardcodedUser(email: string): User {
-  return {
-    id: "dev-user-1",
-    orgId: "default",
-    email,
-    displayName: email.split("@")[0],
-    role: "tpm",
-    createdAt: new Date().toISOString(),
-    lastSeenAt: new Date().toISOString(),
-  };
-}
