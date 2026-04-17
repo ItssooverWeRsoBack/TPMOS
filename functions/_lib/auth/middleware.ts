@@ -8,6 +8,7 @@
  */
 
 import type { User } from "../../../src/lib/tpmos/schemas/user";
+import { verifyAccessJwt } from "./jwks";
 
 const COOKIE_NAME = "tpmos_dev_auth";
 const ENCODER = new TextEncoder();
@@ -15,11 +16,29 @@ const ENCODER = new TextEncoder();
 /** Extract the authenticated user's email from the request. */
 export async function getAuthenticatedEmail(
   request: Request,
-  env: { ENV: string; AUTH_SECRET?: string }
+  env: { ENV: string; AUTH_SECRET?: string; CLOUDFLARE_ACCESS_TEAM?: string }
 ): Promise<string | null> {
   // Method 1: Cloudflare Access header (may not be present on Pages)
   const accessEmail = request.headers.get("Cf-Access-Authenticated-User-Email");
   if (accessEmail) return accessEmail;
+
+  // Method 1.5: JWKS-verified CF_Authorization JWT (defense in depth)
+  // Only attempted when CLOUDFLARE_ACCESS_TEAM env var is set and CF_Authorization cookie exists
+  if (env.CLOUDFLARE_ACCESS_TEAM) {
+    const cookieHeader = request.headers.get("Cookie");
+    if (cookieHeader) {
+      const cookies = parseCookies(cookieHeader);
+      const cfToken = cookies["CF_Authorization"];
+      if (cfToken) {
+        try {
+          const verified = await verifyAccessJwt(cfToken, env.CLOUDFLARE_ACCESS_TEAM);
+          if (verified?.email) return verified.email;
+        } catch {
+          // Graceful degradation: fall through to decode-only approach
+        }
+      }
+    }
+  }
 
   // Method 2: Decode the CF_Authorization JWT cookie (set by Cloudflare Access)
   const cfAuthEmail = extractEmailFromAccessJwt(request);
