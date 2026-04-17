@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useCurrentUser } from "@/lib/tpmos/hooks/use-current-user";
 import { RoleBadge } from "./role-badge";
+import { OrgSwitcher } from "./org-switcher";
 import type { UserRole } from "@/lib/tpmos/schemas/user";
 import {
   LayoutDashboard,
@@ -70,6 +71,11 @@ export function Sidebar() {
           <span className="text-xs font-bold text-primary-foreground">T</span>
         </div>
         <span className="text-sm font-semibold text-sidebar-foreground">TPMOS</span>
+      </div>
+
+      {/* Org switcher */}
+      <div className="border-b border-sidebar-border px-3 py-2">
+        <OrgSwitcher />
       </div>
 
       {/* Navigation */}
