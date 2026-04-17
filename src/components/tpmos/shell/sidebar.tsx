@@ -42,13 +42,13 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Quarters", href: "/quarters", icon: CalendarRange },
   { label: "Risks", href: "/risks", icon: AlertTriangle },
   { label: "Intake", href: "/intake", icon: ClipboardList, visibleTo: ["admin", "tpm"] },
-  // Phase 2 placeholders — visible to all for IA transparency
-  { label: "Goals", href: "/goals", icon: Target, badge: "P2" },
-  { label: "Initiatives", href: "/initiatives", icon: Network, badge: "P2" },
-  { label: "Dashboard", href: "/dashboard", icon: BarChart3, badge: "P2" },
-  { label: "Reports", href: "/reports", icon: FileText, badge: "P2" },
+  { label: "Goals", href: "/goals", icon: Target },
+  { label: "Initiatives", href: "/initiatives", icon: Network },
+  { label: "Dashboard", href: "/dashboard", icon: BarChart3 },
+  { label: "Reports", href: "/reports", icon: FileText, visibleTo: ["admin", "tpm"] },
   // Admin section
   { label: "Admin", href: "/admin/users", icon: Shield, visibleTo: ["admin"] },
+  { label: "Audit Log", href: "/admin/audit", icon: Shield, visibleTo: ["admin", "tpm"] },
 ];
 
 export function Sidebar() {

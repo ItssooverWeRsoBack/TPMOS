@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 import { Sidebar } from "./sidebar";
 import { TopBar } from "./top-bar";
+import { CommandPalette } from "./command-palette";
 import type { ReactNode } from "react";
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -17,6 +18,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </Suspense>
         <main className="flex-1 overflow-y-auto p-6">{children}</main>
       </div>
+      <CommandPalette />
     </div>
   );
 }
