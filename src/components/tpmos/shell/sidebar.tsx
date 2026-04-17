@@ -49,6 +49,7 @@ const NAV_ITEMS: NavItem[] = [
   // Admin section
   { label: "Admin", href: "/admin/users", icon: Shield, visibleTo: ["admin"] },
   { label: "Audit Log", href: "/admin/audit", icon: Shield, visibleTo: ["admin", "tpm"] },
+  { label: "Integrations", href: "/admin/connectors", icon: Shield, visibleTo: ["admin"] },
 ];
 
 export function Sidebar() {
