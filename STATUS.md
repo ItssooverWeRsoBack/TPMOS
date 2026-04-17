@@ -1,113 +1,81 @@
 # TPMOS Build Status
 
-> This file is the single source of truth for build progress.
+> Single source of truth for build progress.
 
-**Last updated:** 2026-04-14
+**Last updated:** 2026-04-17
 **Last actor:** claude-opus-4-6
-**Current phase:** MVP COMPLETE
-**Resume here:** Phase 2 — see `docs/IMPLEMENTATION_PLAN_PHASE2.md`
+**Current phase:** PHASE 2 COMPLETE
+**Resume here:** Phase 3 — integrations, multi-org, advanced AI
 
-## Quick links for new sessions
+## Quick links
 
-1. **Start here:** [`docs/AGENTS.md`](docs/AGENTS.md)
-2. **Phase 2 plan:** [`docs/IMPLEMENTATION_PLAN_PHASE2.md`](docs/IMPLEMENTATION_PLAN_PHASE2.md)
-3. **MVP plan (reference):** [`docs/IMPLEMENTATION_PLAN_MVP.md`](docs/IMPLEMENTATION_PLAN_MVP.md)
-4. **Decisions:** [`docs/DECISIONS.md`](docs/DECISIONS.md)
-5. **Product spec:** [`docs/PRD.md`](docs/PRD.md)
-6. **Architecture spec:** [`docs/ARD.md`](docs/ARD.md)
-7. **API design:** [`docs/API_DESIGN.md`](docs/API_DESIGN.md)
-8. **Data model:** [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md)
-9. **AI integration:** [`docs/AI_INTEGRATION.md`](docs/AI_INTEGRATION.md)
+1. [`docs/AGENTS.md`](docs/AGENTS.md) — LLM session briefing
+2. [`docs/IMPLEMENTATION_PLAN_PHASE2.md`](docs/IMPLEMENTATION_PLAN_PHASE2.md) — Phase 2 plan (completed)
+3. [`docs/DECISIONS.md`](docs/DECISIONS.md) — architecture decisions
+4. [`docs/PRD.md`](docs/PRD.md) | [`docs/ARD.md`](docs/ARD.md) | [`docs/API_DESIGN.md`](docs/API_DESIGN.md)
 
-## Surfaces (15 total)
+## All 15 Surfaces — FUNCTIONAL
 
-| # | Surface | State | Milestone |
-|---|---|---|---|
-| 1 | Auth / Login | ✅ shipped | M1 |
-| 2 | Home | ✅ shipped | M3 |
-| 3 | Teams Directory | ✅ shipped | M3 |
-| 4 | Team Detail (inline in Teams) | ✅ shipped | M3 |
-| 5 | Quarterly Planning (Planner) | ✅ shipped | M5+M6 |
-| 6 | Epic Detail (inline in Planner) | ✅ shipped | M5 |
-| 7 | Quarter Management | ✅ shipped | M3 |
-| 8 | Leadership Goals | 📦 placeholder | Phase 2 |
-| 9 | Initiative Mapping | 📦 placeholder | Phase 2 |
-| 10 | Executive Visualizer | 📦 placeholder | Phase 2 |
-| 11 | TPM Intake | ✅ shipped | M10 |
-| 12 | Reporting/Export | 📦 placeholder | Phase 2 |
-| 13 | Capacity | ✅ shipped | M4 |
-| 14 | Risks Feed | ✅ shipped | M7 |
-| 15 | Admin | ✅ shipped | M3 |
+| # | Surface | Milestone |
+|---|---|---|
+| 1 | Auth / Login | M1 |
+| 2 | Home (with activity feed) | M3 + P2-M5 |
+| 3 | Teams Directory | M3 |
+| 4 | Team Detail | M3 |
+| 5 | Quarterly Planning (Planner) | M5 + M6 |
+| 6 | Epic Detail | M5 |
+| 7 | Quarter Management | M3 |
+| 8 | Leadership Goals | P2-M1 |
+| 9 | Initiative Mapping | P2-M2 |
+| 10 | Executive Dashboard | P2-M3 |
+| 11 | TPM Intake | M10 |
+| 12 | Reporting/Export | P2-M4 |
+| 13 | Capacity | M4 |
+| 14 | Risks Feed | M7 |
+| 15 | Admin + Audit Log | M3 + P2-M5 |
 
-**11 functional + 4 placeholders = 15 total IA locked**
+## All Milestones — COMPLETE
 
-## Milestones — ALL COMPLETE
+### MVP (M0-M11) — v0.1.0
+- [x] M0 Bootstrap, docs, CI
+- [x] M1 Auth + AppShell + routes
+- [x] M2 Data layer (108 tests)
+- [x] M3 Teams + Quarters + Admin
+- [x] M4 Capacity (18 tests)
+- [x] M5 Epics + Voting (17 tests)
+- [x] M6 Planner board (17 tests)
+- [x] M7 Status + Risks (12 tests)
+- [x] M8 Carry-forward (12 tests)
+- [x] M9 AI A1+A2 (10 tests)
+- [x] M10 TPM Intake + AI B1+B2
+- [x] M11 Polish + Seed + Demo
 
-- [x] **M0** — Bootstrap, docs, CI
-- [x] **M1** — Auth + AppShell + 15 route placeholders
-- [x] **M2** — Data layer (D1 schema, queries, can() — 108 tests)
-- [x] **M3** — Teams + Quarters + Admin + Home
-- [x] **M4** — Capacity planning (domain: 18 tests)
-- [x] **M5** — Epics + Voting + WSJF (domain: 17 tests)
-- [x] **M6** — Planner board with dnd-kit (domain: 17 tests)
-- [x] **M7** — Status tracking + Risks feed (domain: 12 tests)
-- [x] **M8** — Carry-forward + Quarter close (domain: 12 tests)
-- [x] **M9** — AI hooks A1+A2 (epic drafting + DoD lint — 10 tests)
-- [x] **M10** — TPM Intake + AI B1+B2 (synthesis + clustering)
-- [x] **M11** — Polish + Seed + Demo
+### Phase 2 (P2-M1 to P2-M6) — v0.2.0
+- [x] P2-M1 Leadership Goals
+- [x] P2-M2 Initiative/Product Mapping
+- [x] P2-M3 Executive Dashboard
+- [x] P2-M4 Reporting/Export + AI B3
+- [x] P2-M5 Audit log, home feed, command palette
+- [x] P2-M6 Integration scaffolding (GitHub/Linear/Slack stubs)
 
 ## Stats
 
 | Metric | Count |
 |---|---|
-| Files | ~165 |
+| Surfaces | 15 (all functional) |
+| Files | ~180 |
 | Tests | 194 |
-| Migrations | 5 |
-| API endpoints | 24 |
-| AI hooks | 4 (A1, A2, B1, B2) |
-| Domain functions | 5 (capacity, wsjf, planner-line, progress, carry-forward) |
-| Decisions logged | 14 |
-| Docs | 12 |
+| Migrations | 7 |
+| API endpoints | 35+ |
+| AI hooks | 5 (A1, A2, B1, B2, B3) |
+| Domain functions | 5 (100% branch coverage) |
+| Connector stubs | 3 (GitHub, Linear, Slack) |
 
-## What's shipped
+## Phase 3 (future)
 
-### Planning Loop (end-to-end)
-- Teams + members CRUD with role-aware permissions
-- Quarter lifecycle: planning → active (lock) → closed
-- Capacity planning: member-weeks math, overhead deductions, capacity bar
-- Epics CRUD with optimistic concurrency (version + If-Match)
-- WSJF voting: 3 dimensions (1-10), per-dimension variance, consensus heatmap
-- Drag-and-drop above/below-the-line planner with live capacity tracking
-- Status tracking: 5 states + at-risk + percent complete + progress vs time bar
-- Carry-forward with provenance tracking
-- Cross-team risks feed
-
-### AI Integration
-- Provider abstraction: Workers AI (free) ↔ Anthropic Claude Haiku ↔ none
-- A1: Epic description + DoD drafting from title
-- A2: DoD quality lint (regex fast-check + LLM deep check)
-- B1: Interview synthesis (scope, challenges, themes, actions)
-- B2: Theme clustering across interviews
-
-### TPM Intake
-- Structured 4-question interviews
-- One-click AI synthesis
-- Theme cluster visualization (bubble chart + list)
-
-### Infrastructure
-- Cloudflare Pages Functions + D1 backend
-- Auth: Cloudflare Access (prod) + hard-gated dev cookie (local)
-- 194 tests (domain logic 100% branch coverage)
-- CI: lint + typecheck + test + build on every push
-- 12 canonical docs (PRD, ARD, API_DESIGN, DATA_MODEL, AI_INTEGRATION, etc.)
-- LLM-resumable tracking (STATUS.md + AGENTS.md + DECISIONS.md)
-
-## What's next (Phase 2)
-
-See [`docs/IMPLEMENTATION_PLAN_PHASE2.md`](docs/IMPLEMENTATION_PLAN_PHASE2.md):
-1. Leadership Goals page
-2. Initiative/Product Mapping with gap detection
-3. Executive Dashboard with rollups
-4. Reporting/Export with AI narrative
-5. Audit log UI, improved home, command palette search
-6. Integration scaffolding (GitHub, Linear, Slack)
+- Implement GitHub/Linear/Slack connectors
+- Multi-org support
+- Voice-to-text standup notes
+- Vector search across all entities
+- Real embeddings for theme clustering
+- Mobile-responsive polish
