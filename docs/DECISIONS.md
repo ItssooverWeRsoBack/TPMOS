@@ -169,3 +169,27 @@
 - No SPA fallback routing needed on Cloudflare
 - Phase 2 could optionally re-add path segments via SSR migration, but likely unnecessary
 **Reversibility:** Medium — route structure is set early, but the components are the same either way.
+
+---
+
+## DEC-0015 — Complete integrations with signed ingress and a durable D1 outbox
+**Date:** 2026-10-05
+**Status:** Accepted
+**Context:** Source review found manual imports without deduplication, stubbed status pushback, unwired Slack dispatch, wrong UI credential names, and auth/concurrency gaps. Owner requested completion of the existing integrations and review improvements.
+**Decision:** Finish GitHub, Linear, and Slack using shared runtime-validated connector contracts. Persist external identity and signed webhook delivery identity. Use a transactional D1 outbox for notifications/status writes, immediate attempts, and a separate scheduled Worker for bounded retry/dead-letter recovery. Keep the Pages modular monolith; WebSockets and Notion are not part of this scope. Encrypt connector secrets using an environment-provided AES-GCM key and never return credentials. Enforce signature, issuer, audience, and expiry for production Access identity; keep local auth explicitly local.
+**Consequences:** Requires a D1 migration, Access team/audience and encryption-key secrets, separate dispatcher deployment, and narrowly scoped provider webhook exceptions to the human Access policy. At-least-once Slack delivery has an ambiguous-response duplicate window; no exactly-once claim. Existing plaintext credentials require explicit encryption migration before production use.
+**Reversibility:** Medium — connector paths can be disabled and dispatcher undeployed; retain durable records for reconciliation.
+
+---
+
+## DEC-0016 — Demo-only integration completion; no live ingress or background costs
+**Date:** 2026-10-05
+**Status:** Accepted (supersedes DEC-0015)
+**Context:** Owner explicitly requires essentially free testing/demos without new spam, security, or unexpected-fee vectors.
+**Decision:** Complete the GitHub/Linear/Slack demonstration paths with shared contracts, admin-triggered fixture imports, stable external identity, simulated status/notification artifacts, and mock-only provider tests. All application connector test/sync routes reject non-demo connectors; no live provider calls, new webhook receiver routes, scheduler, queue/dispatcher, or paid AI calls are introduced. Do not require provider credentials for a demo; do not return stored credentials. Keep the optional signed-webhook exercise in the companion compendium as a standalone loopback-only Node lab, not a TPMOS deployment.
+**Consequences:** Real production delivery is intentionally disabled. Existing providers remain code to review/mock-test, not proof of live integration readiness. Demo writes use the existing D1 database and are manually initiated by an administrator; there is no claim of unlimited free Cloudflare usage. A local disposable SQLite/D1 environment is the preferred test target. Repair the local-cookie parser, scoped connector access, and atomic version predicate without weakening production auth.
+**Reversibility:** High — future live work requires a new explicit decision and provider/tenant/security verification.
+
+
+### DEC-0016 implementation note — clean local migration
+Disposable SQLite validation found migration 0007 declared the report snapshot primary key twice, preventing a fresh database from migrating. Remove the redundant table-level declaration; the existing inline primary key remains unchanged. This corrects fresh installs only and does not alter an already-applied production table.

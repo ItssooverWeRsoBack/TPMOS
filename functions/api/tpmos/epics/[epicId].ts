@@ -48,7 +48,10 @@ export const onRequestPatch: PagesFunction<Env> = async (context) => {
   }
 
   const ifMatch = context.request.headers.get("If-Match");
-  const version = ifMatch ? Number(ifMatch) : epic.version;
+  if (!ifMatch || !/^[1-9]\d*$/.test(ifMatch) || !Number.isSafeInteger(Number(ifMatch))) {
+    return Response.json({ error: { code: "PRECONDITION_REQUIRED", message: "A positive integer If-Match version is required" } }, { status: 428 });
+  }
+  const version = Number(ifMatch);
 
   const result = await updateEpic(context.env.DB, epicId, body.data, user.id, version);
   if (!result) {

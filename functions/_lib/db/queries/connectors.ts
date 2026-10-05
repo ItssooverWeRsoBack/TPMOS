@@ -24,8 +24,8 @@ export async function listConnectors(db: D1Database, orgId: string) {
   );
 }
 
-export async function getConnectorById(db: D1Database, id: string) {
-  return first<ConnectorRow>(db, "SELECT * FROM connector_configs WHERE id = ?", id);
+export async function getConnectorById(db: D1Database, id: string, orgId: string) {
+  return first<ConnectorRow>(db, "SELECT * FROM connector_configs WHERE id = ? AND org_id = ?", id, orgId);
 }
 
 export async function createConnector(
@@ -42,7 +42,7 @@ export async function createConnector(
     id, orgId, input.type, input.name,
     JSON.stringify(input.credentials), JSON.stringify(input.settings), actorId
   );
-  return getConnectorById(db, id);
+  return first<ConnectorRow>(db, "SELECT * FROM connector_configs WHERE id = ?", id);
 }
 
 export async function updateConnector(
@@ -58,14 +58,14 @@ export async function updateConnector(
   if (input.credentials) { updates.push("credentials = ?"); params.push(JSON.stringify(input.credentials)); }
   if (input.settings) { updates.push("settings = ?"); params.push(JSON.stringify(input.settings)); }
 
-  if (updates.length === 0) return getConnectorById(db, id);
+  if (updates.length === 0) return first<ConnectorRow>(db, "SELECT * FROM connector_configs WHERE id = ?", id);
 
   updates.push("updated_at = datetime('now')");
   updates.push("version = version + 1");
   params.push(id);
 
   await run(db, `UPDATE connector_configs SET ${updates.join(", ")} WHERE id = ?`, ...params);
-  return getConnectorById(db, id);
+  return first<ConnectorRow>(db, "SELECT * FROM connector_configs WHERE id = ?", id);
 }
 
 export async function updateSyncStatus(db: D1Database, id: string, status: string) {
@@ -83,7 +83,7 @@ export function toConnectorResponse(row: ConnectorRow) {
     type: row.type,
     name: row.name,
     enabled: row.enabled === 1,
-    credentials: JSON.parse(row.credentials),
+    credentials: {},
     settings: JSON.parse(row.settings),
     lastSyncAt: row.last_sync_at,
     lastSyncStatus: row.last_sync_status,

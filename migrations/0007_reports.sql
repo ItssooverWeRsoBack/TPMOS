@@ -8,7 +8,6 @@ CREATE TABLE report_snapshots (
   generated_at TEXT NOT NULL DEFAULT (datetime('now')),
   generated_by TEXT NOT NULL REFERENCES users(id),
   content TEXT NOT NULL,
-  metadata TEXT,
-  PRIMARY KEY (id)
+  metadata TEXT
 );
 CREATE INDEX idx_reports_org_quarter ON report_snapshots(org_id, quarter_id, generated_at DESC);

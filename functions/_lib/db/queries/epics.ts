@@ -2,6 +2,8 @@ import { query, first, run, generateId } from "../client";
 
 interface EpicRow {
   id: string;
+  connector_id?: string | null;
+  external_id?: string | null;
   team_id: string;
   quarter_id: string;
   title: string;
@@ -104,10 +106,12 @@ export async function updateEpic(
   updates.push("updated_at = datetime('now')");
   updates.push("updated_by = ?"); params.push(actorId);
   updates.push("version = version + 1");
-  params.push(epicId);
+  params.push(epicId, expectedVersion);
 
-  await run(db, `UPDATE epics SET ${updates.join(", ")} WHERE id = ?`, ...params);
-  return getEpicById(db, epicId);
+  const result = await run(db, `UPDATE epics SET ${updates.join(", ")} WHERE id = ? AND version = ?`, ...params);
+  const current = await getEpicById(db, epicId);
+  if (result.meta.changes === 0 && current) return { conflict: true, current };
+  return current;
 }
 
 export async function updateEpicStatus(

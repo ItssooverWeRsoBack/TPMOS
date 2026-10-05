@@ -118,10 +118,13 @@ async function verifyDevCookie(
   const value = cookies[COOKIE_NAME];
   if (!value) return null;
 
+  // Emails can contain periods; only the final two segments are metadata.
   const parts = value.split(".");
-  if (parts.length !== 3) return null;
-
-  const [email, timestamp, hmac] = parts;
+  if (parts.length < 3) return null;
+  const hmac = parts.pop()!;
+  const timestamp = parts.pop()!;
+  const email = parts.join(".");
+  if (!email.includes("@") || !/^\d+$/.test(timestamp)) return null;
   const payload = `${email}.${timestamp}`;
 
   // Verify HMAC
@@ -130,7 +133,7 @@ async function verifyDevCookie(
 
   // Check expiry (24 hours)
   const issued = parseInt(timestamp, 10);
-  if (isNaN(issued) || Date.now() - issued > 24 * 60 * 60 * 1000) return null;
+  if (isNaN(issued) || issued > Date.now() || Date.now() - issued > 24 * 60 * 60 * 1000) return null;
 
   return email;
 }

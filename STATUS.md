@@ -2,8 +2,8 @@
 
 > Single source of truth for build progress.
 
-**Last updated:** 2026-04-17
-**Last actor:** claude-opus-4-6
+**Last updated:** 2026-10-05
+**Last actor:** Codex
 **Current phase:** ALL PHASES COMPLETE (MVP + Phase 2 + Phase 3)
 **Version:** v0.3.0
 
@@ -57,3 +57,18 @@ P3-M10 JWKS JWT verification
 | Domain functions | 5 + embeddings |
 | Phases completed | 3 |
 | Milestones completed | 28 |
+
+## M12.1 — Demo integration completion
+
+- [x] Shared runtime-validated GitHub/Linear/Slack demo contracts and UI.
+- [x] Admin-only fixture tests/imports; reject live and disabled connectors.
+- [x] Scoped connector/team/quarter access; closed quarters reject imports.
+- [x] Unique external identity; repeated imports retain local epic edits.
+- [x] Persist simulated status and Slack artifacts; no outbound delivery.
+- [x] Credential-free creation and responses, dotted-email local auth repair, atomic epic PATCH version predicate.
+
+**Active task:** Publish hosted demos and the companion walkthrough.
+**Deployment:** Migration 0009 is required before demo runs. Validation: 202 tests pass, typecheck passes, lint has no errors, production export passes, and 26 local HTTP requests / 36 collection assertions pass. Hosted deployment is the next step.
+**Next 3 actions:** Apply migration 0009 to hosted D1; deploy TPMOS and verify Access/login boundaries; publish the compendium and linked API collections.
+
+Historical Phase 3 completion above does not establish live provider readiness. DEC-0016 supersedes live integration work; current application test/sync routes run fixtures only. Existing provider adapters remain available for source review and mock tests. Production auth still trusts the Access identity header and has a decode-only fallback; this release does not change the deployment's authentication requirements.
