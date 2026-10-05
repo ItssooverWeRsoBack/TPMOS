@@ -67,8 +67,12 @@ P3-M10 JWKS JWT verification
 - [x] Persist simulated status and Slack artifacts; no outbound delivery.
 - [x] Credential-free creation and responses, dotted-email local auth repair, atomic epic PATCH version predicate.
 
-**Active task:** Publish hosted demos and the companion walkthrough.
-**Deployment:** Migration 0009 is required before demo runs. Validation: 202 tests pass, typecheck passes, lint has no errors, production export passes, and 26 local HTTP requests / 36 collection assertions pass. Hosted deployment is the next step.
-**Next 3 actions:** Apply migration 0009 to hosted D1; deploy TPMOS and verify Access/login boundaries; publish the compendium and linked API collections.
+**Active task:** M12.1 complete — hosted demo implementation published.
+**Deployment:** Migrations 0008 and 0009 were applied to hosted D1 on 2026-10-05. Validation: 202 tests pass, typecheck passes, lint has no errors, production export passes, and 26 local HTTP requests / 36 collection assertions pass. Hosted deployment: commit 39f3bd8 deployed to Cloudflare Pages production (4c9ced74-1835-458f-95dc-0a31f9b5e1f3).
+**Next 3 actions:** Use hosted demos with an approved administrator account; collect walkthrough feedback; consider live provider delivery only under a new explicit decision.
 
 Historical Phase 3 completion above does not establish live provider readiness. DEC-0016 supersedes live integration work; current application test/sync routes run fixtures only. Existing provider adapters remain available for source review and mock tests. Production auth still trusts the Access identity header and has a decode-only fallback; this release does not change the deployment's authentication requirements.
+
+**Live checks:** Hosted /admin/connectors/ serves the new UI; custom-domain requests redirect to Access. Unauthenticated API requests return 401; production /dev/login returns 404. No signed-in production demo mutations were run from this session. The primary user path is https://tpmos.torfinn.xyz/admin/connectors/ and the companion guide is https://torfinn.xyz/architectures/tpmos.
+
+**Migration reconciliation:** Production already contained the exact table/constraint definitions for migrations 0006 and 0007 but lacked their history rows. Saved a private pre-release D1 backup, verified schema equality, ensured their indexes, and recorded those migrations before applying 0008/0009. Existing planning records were preserved.
