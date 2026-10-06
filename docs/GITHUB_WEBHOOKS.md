@@ -22,7 +22,7 @@ sequenceDiagram
 ## Quick start in the web app
 
 1. Open [TPMOS Integrations](https://tpmos.torfinn.xyz/admin/connectors/) and sign in through Cloudflare Access with a TPMOS administrator account.
-2. In **GitHub webhooks**, enter the repository as `OWNER/REPOSITORY` and its numeric repository ID. For a public repository, open `https://api.github.com/repos/OWNER/REPOSITORY` in your browser and copy the top-level `id` field. For a private repository, use authenticated GitHub CLI: `gh api repos/OWNER/REPOSITORY --jq .id`. This is a setup lookup; TPMOS stores no GitHub access token.
+2. In **GitHub webhooks**, enter the repository as `OWNER/REPOSITORY` or paste its full GitHub repository URL, and enter its numeric repository ID. For a public repository, open `https://api.github.com/repos/OWNER/REPOSITORY` in your browser and copy the top-level `id` field. For a private repository, use authenticated GitHub CLI: `gh api repos/OWNER/REPOSITORY --jq .id`. This is a setup lookup; TPMOS stores no GitHub access token.
 3. Select a demo team and an open quarter. Use a separate practice plan: GitHub events create and update real epics in that selected plan. Click **Connect repository**.
 4. Copy the generated **GitHub payload URL** and **Secret**. The secret is shown only after connection creation or explicit rotation. Keep it private.
 5. In the GitHub repository, open **Settings → Webhooks → Add webhook**. Enter the payload URL, choose **application/json**, paste the secret, and leave SSL verification enabled. Select **Let me select individual events → Issues**. Leave **Active** checked and save. GitHub sends a `ping`.
@@ -35,7 +35,7 @@ The receiver is `https://tpmos-github-webhooks.torfinnolsen.workers.dev/github/C
 
 [ItssooverWeRsoBack/webhook-practice](https://github.com/ItssooverWeRsoBack/webhook-practice) is connected to the **Webhook Practice** team and quarter. [Open the practice plan](https://tpmos.torfinn.xyz/plan/?team=webhook-practice&quarter=default%3Awebhook-practice) after signing in. [Issue #1](https://github.com/ItssooverWeRsoBack/webhook-practice/issues/1) was used to verify real opened/edited/closed/reopened deliveries and redelivery without duplicate epic writes. You can use that issue or create another.
 
-The webhook is already configured on this repository; you do not need its secret to practice issue events. To administer it, use repository owner/admin access. Creating issues requires normal GitHub permissions.
+The webhook is already configured on this repository; you do not need to click Connect repository again or obtain its secret to practice issue events. To administer it, use repository owner/admin access. Creating issues requires normal GitHub permissions.
 
 ## What updates
 

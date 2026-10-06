@@ -91,3 +91,13 @@ Historical Phase 3 completion above does not establish live provider readiness. 
 **Validation:** 212 tests, typecheck, production build, receiver bundle and actual Miniflare D1 transaction checks pass. GitHub CI succeeds. Hosted pages.dev rejects header-only identity with 401; production dev login is 404.
 **Cost:** No paid subscription, queue, scheduler or AI call was enabled. Workers/D1 features support Free quotas; current credential cannot read subscriptions, so account billing must be checked in the Cloudflare dashboard before asserting a guaranteed $0 bill.
 **Next 3 actions:** Practice through the hosted repository/plan; add further repository connections as needed; confirm account Workers Free status in the billing dashboard.
+
+
+## M12.3 — Repository setup form usability
+
+- [x] Shared schema accepts owner/repository or a full GitHub repository page URL.
+- [x] Human-readable inline field validation replaces raw Zod regex JSON errors.
+- [x] Existing connection guidance and local duplicate detection prevent unnecessary reconnect attempts.
+- [x] Schema regression tests cover normalization, hostile URLs and connection fields.
+
+**Active task:** Validate and publish M12.3.
