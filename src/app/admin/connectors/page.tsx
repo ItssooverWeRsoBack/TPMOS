@@ -1,4 +1,5 @@
 "use client";
+import { GitHubWebhooks } from "@/components/tpmos/connectors/github-webhooks";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { PageHeader } from "@/components/tpmos/shared/page-header";
@@ -23,7 +24,8 @@ export default function ConnectorsPage() {
   const test = useMutation({ mutationFn: testDemoConnector });
   const run = useMutation({ mutationFn: (id: string) => runDemoConnector(id, team, quarter), onSuccess: () => { qc.invalidateQueries({ queryKey: ["connectors"] }); qc.invalidateQueries({ queryKey: ["epics"] }); } });
   return <div className="space-y-6">
-    <PageHeader title="Integration demos" description="Import GitHub or Linear fixtures and preview status updates or Slack messages. Runs use your selected team and quarter. No provider credentials are needed." />
+    <PageHeader title="Integrations" description="Import GitHub or Linear fixtures and preview status updates or Slack messages. Runs use your selected team and quarter. No provider credentials are needed." />
+    <GitHubWebhooks />
     <form onSubmit={e => { e.preventDefault(); create.mutate(); }} className="space-y-3 rounded-lg border border-border bg-card p-4">
       <h2 className="text-sm font-semibold">Add a demo connector</h2>
       <div className="grid gap-3 sm:grid-cols-2">
@@ -40,7 +42,7 @@ export default function ConnectorsPage() {
     {isLoading && <div className="h-20 animate-pulse rounded-lg border bg-card" />}
     {!teams.isLoading && !quarters.isLoading && (!team || !quarter) && <p className="text-sm text-muted-foreground">Create a team and an open quarter before running a demo.</p>}
     {connectors?.length === 0 && <p className="text-sm text-muted-foreground">Add a connector to start a demo.</p>}
-    {connectors?.map(conn => <div key={conn.id} className="space-y-3 rounded-lg border border-border bg-card p-4">
+    {connectors?.filter(conn => conn.settings.mode !== "webhook").map(conn => <div key={conn.id} className="space-y-3 rounded-lg border border-border bg-card p-4">
       <div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-sm font-semibold">{conn.name} · {conn.type}</h2><p className="text-xs text-muted-foreground">{conn.settings.mode === "demo" ? "Demo" : "Live connector disabled"} · {conn.lastSyncStatus ?? "No demo run yet"}</p></div>
         <div className="flex gap-2"><button disabled={test.isPending || !conn.enabled || conn.settings.mode !== "demo"} onClick={() => test.mutate(conn.id)} className="rounded-md border px-3 py-1.5 text-xs disabled:opacity-50">Test fixture</button><button disabled={run.isPending || !team || !quarter || !conn.enabled || conn.settings.mode !== "demo"} onClick={() => run.mutate(conn.id)} className="rounded-md border px-3 py-1.5 text-xs disabled:opacity-50">{conn.type === "slack" ? "Preview message" : "Import & preview status"}</button></div>
       </div>

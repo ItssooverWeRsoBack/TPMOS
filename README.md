@@ -2,7 +2,7 @@
 
 A Linear-quality operating environment for Technical Program Managers and engineering leaders to interview leads, run quarterly planning, model capacity, vote on epics, track execution, and map work to leadership goals.
 
-**Live:** https://tpmos.torfinn.xyz *(after M0.10)*
+**Live:** https://tpmos.torfinn.xyz
 **Status:** [STATUS.md](./STATUS.md) — current build state, always up to date
 **Companion site:** https://torfinn.xyz (Systems Design Interview reference)
 
@@ -14,6 +14,12 @@ A Linear-quality operating environment for Technical Program Managers and engine
 | **Engineering Managers** | Run quarterly planning end-to-end. See what fits in 5 seconds via the above/below-the-line planner. |
 | **Engineering ICs** | Vote on epics in 5 minutes. Update status in 30 seconds. |
 | **Executives** | Goal coverage map. Cross-team progress. Risk concentration. |
+
+## GitHub webhook integration
+
+Connect a GitHub repository to a TPMOS team and quarter. Signed issue events received by a separate Cloudflare Worker create/update linked epics; delivery replay is idempotent. Set it up and practice directly in the hosted app.
+
+**[GitHub webhook setup, demo exercises, troubleshooting, and deployment →](docs/GITHUB_WEBHOOKS.md)**
 
 ## Stack
 
@@ -64,6 +70,7 @@ Full setup in [`docs/DEV.md`](docs/DEV.md).
 | [`docs/AI_INTEGRATION.md`](docs/AI_INTEGRATION.md) | LLM provider abstraction + AI hook spec |
 | [`docs/DEV.md`](docs/DEV.md) | Local development setup |
 | [`docs/DEPLOY.md`](docs/DEPLOY.md) | Production deployment guide |
+| [`docs/GITHUB_WEBHOOKS.md`](docs/GITHUB_WEBHOOKS.md) | Hosted GitHub webhook setup, practice exercises and receiver deployment |
 
 ## License
 

@@ -17,6 +17,8 @@ interface Env {
   AI: Ai;
   ENV: string;
   AUTH_SECRET?: string;
+  CLOUDFLARE_ACCESS_TEAM?: string;
+  CLOUDFLARE_ACCESS_AUD?: string;
   AI_PROVIDER: string;
 }
 

@@ -193,3 +193,12 @@
 
 ### DEC-0016 implementation note — clean local migration
 Disposable SQLite validation found migration 0007 declared the report snapshot primary key twice, preventing a fresh database from migrating. Remove the redundant table-level declaration; the existing inline primary key remains unchanged. This corrects fresh installs only and does not alter an already-applied production table.
+
+
+## DEC-0017 — Signed GitHub issue ingress on a separate Cloudflare Worker
+**Date:** 2026-10-05
+**Status:** Accepted (extends DEC-0016 for explicitly requested GitHub webhooks)
+**Context:** Owner requested a hosted, free-tier-compatible GitHub webhook receiver that updates TPMOS and a dedicated usage document linked from README.
+**Decision:** Subscribe to issue opened/edited/closed/reopened and ping events. Keep human/admin routes behind verified Cloudflare Access JWTs; expose only the receiver Worker independently, authenticated by raw-body HMAC-SHA256 and a per-connection secret. Bind repository numeric ID and full name to a single organization/team/quarter. Derive connection secrets from a shared Worker/Pages master secret; never store plaintext provider secrets in D1. Atomically record delivery identity and upsert the linked epic in a D1 batch; reject stale timestamps and preserve TPMOS-owned fields. Keep up to 100 delivery summaries per connection, never raw request bodies. No queues, scheduler, AI calls, provider writeback, or GitHub tokens are required.
+**Consequences:** Migration 0010, a separate Worker with the existing D1 binding, and shared secret deployment are required. User configures the webhook in a repository they administer. Numeric IDs prevent matching a different repository with the same name. Equal-second GitHub timestamps have no causal ordering guarantee; latest arrival wins at equal timestamps. Metadata and issue payload fields are bounded. Only issue events are supported; push/PR events do not update epics. Free-tier quotas are account-wide, and paid accounts retain their existing billing rules.
+**Reversibility:** Disable a connection in TPMOS or remove its GitHub webhook; undeploy the receiver independently of the app.

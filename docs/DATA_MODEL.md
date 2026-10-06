@@ -312,3 +312,7 @@ This matrix is the test specification for `src/lib/tpmos/domain/__tests__/can.te
 ## Demo integrations — migration 0009
 
 Epics optionally carry `connector_id` and `external_id`. A unique index over connector, team, quarter and external identity makes concurrent fixture imports idempotent while preserving local edits. `connector_demo_artifacts` stores one JSON status or notification preview per connector/team/quarter/kind. These records are never background delivery jobs. Application creation accepts only `settings: {mode: "demo"}` and empty credentials; existing live configs are disabled by route checks and credentials are never included in responses.
+
+## GitHub webhooks — migration 0010
+
+`github_webhook_connections` binds a connector to organization, stable numeric repository ID/name, team and quarter. `enabled`, `secret_version` and `version` support disabling and atomic administrator rotation. The shared deployment master key derives per-connection secrets; D1 holds no plaintext webhook secret. Epics optionally store `external_updated_at` to ignore older source snapshots. `github_webhook_receipts` retains compact delivery IDs/results indefinitely for idempotency; `github_webhook_deliveries` keeps at most 100 display summaries per connection, without raw bodies. These writes commit together with the linked epic upsert.

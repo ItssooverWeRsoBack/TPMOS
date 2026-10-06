@@ -42,9 +42,11 @@ const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
  */
 export async function verifyAccessJwt(
   token: string,
-  teamDomain: string
+  teamDomain: string,
+  audience: string
 ): Promise<{ email: string } | null> {
   try {
+    if (!/^[a-z0-9-]+$/i.test(teamDomain) || !audience) return null;
     const parts = token.split(".");
     if (parts.length !== 3) return null;
 
@@ -80,9 +82,13 @@ export async function verifyAccessJwt(
     const payload = JSON.parse(base64UrlDecode(payloadB64)) as JWTPayload;
 
     // Verify expiry
-    if (payload.exp && payload.exp < Date.now() / 1000) return null;
+    const now = Date.now() / 1000;
+    if (typeof payload.exp !== "number" || payload.exp <= now) return null;
+    if (payload.iss !== `https://${teamDomain}.cloudflareaccess.com`) return null;
+    if (!Array.isArray(payload.aud) || !payload.aud.includes(audience)) return null;
+    if (typeof payload.nbf === "number" && payload.nbf > now) return null;
 
-    if (!payload.email) return null;
+    if (typeof payload.email !== "string" || !payload.email.includes("@")) return null;
 
     return { email: payload.email };
   } catch {
@@ -99,7 +105,7 @@ async function getSigningKey(
 ): Promise<CryptoKey | null> {
   // Check cache
   if (Date.now() < cacheExpiry) {
-    const cached = cachedKeys.get(kid);
+    const cached = cachedKeys.get(`${teamDomain}:${kid}`);
     if (cached) return cached;
   }
 
@@ -107,7 +113,7 @@ async function getSigningKey(
   const jwksUrl = `https://${teamDomain}.cloudflareaccess.com/cdn-cgi/access/certs`;
 
   try {
-    const res = await fetch(jwksUrl);
+    const res = await fetch(jwksUrl, { signal: AbortSignal.timeout(3000) });
     if (!res.ok) return null;
 
     const jwks = (await res.json()) as JWKSResponse;
@@ -133,7 +139,7 @@ async function getSigningKey(
           false,
           ["verify"]
         );
-        newKeys.set(jwk.kid, cryptoKey);
+        newKeys.set(`${teamDomain}:${jwk.kid}`, cryptoKey);
       } catch {
         // Skip keys that fail to import
       }
@@ -143,7 +149,7 @@ async function getSigningKey(
     cachedKeys = newKeys;
     cacheExpiry = Date.now() + CACHE_TTL_MS;
 
-    return newKeys.get(kid) ?? null;
+    return newKeys.get(`${teamDomain}:${kid}`) ?? null;
   } catch {
     return null;
   }

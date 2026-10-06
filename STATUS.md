@@ -76,3 +76,15 @@ Historical Phase 3 completion above does not establish live provider readiness. 
 **Live checks:** Hosted /admin/connectors/ serves the new UI; custom-domain requests redirect to Access. Unauthenticated API requests return 401; production /dev/login returns 404. No signed-in production demo mutations were run from this session. The primary user path is https://tpmos.torfinn.xyz/admin/connectors/ and the companion guide is https://torfinn.xyz/architectures/tpmos.
 
 **Migration reconciliation:** Production already contained the exact table/constraint definitions for migrations 0006 and 0007 but lacked their history rows. Saved a private pre-release D1 backup, verified schema equality, ensured their indexes, and recorded those migrations before applying 0008/0009. Existing planning records were preserved.
+
+## M12.2 — Hosted GitHub issue webhooks
+
+- [x] Separate signed Cloudflare receiver and scoped repository/team/quarter connections.
+- [x] Atomic issue upsert + persistent receipt ledger; stale timestamps and duplicate protection.
+- [x] Hosted setup, delivery log, disable/enable and versioned secret rotation.
+- [x] Fail-closed production Access signature/issuer/audience validation.
+- [x] Dedicated docs/GITHUB_WEBHOOKS.md linked from the main README.
+- [x] 212 unit/integration tests pass, including real SQLite transactions.
+
+**Active task:** M12.2 deployment and a real GitHub practice delivery.
+**Next 3 actions:** Deploy migration/receiver/secrets and Pages; connect a dedicated practice repository; verify a real issue lifecycle and record deployment evidence.
