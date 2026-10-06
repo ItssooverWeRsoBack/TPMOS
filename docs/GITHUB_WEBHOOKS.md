@@ -150,3 +150,9 @@ Tests exercise the actual SQLite migrations and SQL, signed body validation, iss
 | `src/components/tpmos/connectors/github-webhooks.tsx` | Hosted setup controls |
 | `src/lib/tpmos/schemas/github-webhook.ts` | Shared runtime contracts |
 | `migrations/0010_github_webhooks.sql` | Connection, delivery and epic timestamp storage |
+
+## Systems design and source walkthrough
+
+The [current TPMOS architecture walkthrough](https://torfinn.xyz/architectures/tpmos) includes the active receiver, a PEDALS systems design workflow, request/response JSON examples, a generated input JSON Schema, and a 17-stop code tour in execution order. [Open the code tour](https://torfinn.xyz/architectures/tpmos#tpmos-webhook-code-tour), or [download its Markdown version](https://torfinn.xyz/demos/tpmos/webhook-code-tour.md) for a presentation. The links are pinned to the reviewed source revision.
+
+[Download the minimal issue JSON](https://torfinn.xyz/demos/tpmos/github-issue-payload.json) and [input JSON Schema](https://torfinn.xyz/demos/tpmos/github-issue.schema.json). These examples contain no secrets, real signatures or unrelated sender metadata. For the full original request, use GitHub Settings → Webhooks → Recent deliveries → Request payload with repository administrator access.

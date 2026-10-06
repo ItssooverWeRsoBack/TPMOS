@@ -100,4 +100,7 @@ Historical Phase 3 completion above does not establish live provider readiness. 
 - [x] Existing connection guidance and local duplicate detection prevent unnecessary reconnect attempts.
 - [x] Schema regression tests cover normalization, hostile URLs and connection fields.
 
-**Active task:** Validate and publish M12.3.
+**Active task:** M12.3 complete — repository setup usability deployed.
+**Validation:** 215 tests, typecheck and production build pass; lint has no errors (existing warnings remain). Commit 99d3b5e deployed successfully through Cloudflare Pages, with successful GitHub CI. The hosted input accepts owner/repository or a full GitHub URL and shows readable field errors; the existing practice connection remains active.
+**Companion:** The current systems design workflow, JSON examples/schema, optional signed client and 17-stop pinned code tour are published at https://torfinn.xyz/architectures/tpmos.
+**Next action:** Use the existing practice repository and plan to exercise issue events; no reconnection is required.
