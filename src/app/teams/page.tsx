@@ -5,10 +5,10 @@ import { PageHeader } from "@/components/tpmos/shared/page-header";
 import { TeamCard } from "@/components/tpmos/teams/team-card";
 import { TeamForm } from "@/components/tpmos/teams/team-form";
 import { MemberList } from "@/components/tpmos/teams/member-list";
-import { useTeams, useTeamMembers, useCreateTeam } from "@/lib/tpmos/hooks/use-teams";
+import { useTeams, useTeamMembers, useCreateTeam, useAddTeamMember } from "@/lib/tpmos/hooks/use-teams";
 import { useCurrentUser } from "@/lib/tpmos/hooks/use-current-user";
-import { Plus, X, ChevronRight } from "lucide-react";
-import Link from "next/link";
+import { TeamPlanningNavigation } from "@/components/tpmos/teams/planning-navigation";
+import { Plus, X } from "lucide-react";
 
 export default function TeamsPage() {
   const { data: user } = useCurrentUser();
@@ -16,7 +16,8 @@ export default function TeamsPage() {
   const [showForm, setShowForm] = useState(false);
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
   const createTeam = useCreateTeam();
-  const { data: members } = useTeamMembers(selectedTeamId);
+  const { data: members, isLoading: membersLoading, error: membersError } = useTeamMembers(selectedTeamId);
+  const addMember = useAddTeamMember(selectedTeamId);
 
   const canCreate = user && (user.role === "admin" || user.role === "tpm");
   const selectedTeam = teams?.find((t) => t.id === selectedTeamId);
@@ -97,27 +98,9 @@ export default function TeamsPage() {
           <div className="space-y-4 rounded-lg border border-border bg-card p-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-foreground">{selectedTeam.name}</h3>
-              <div className="flex gap-1.5">
-                <Link
-                  href={`/plan?team=${selectedTeam.slug}`}
-                  className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[11px] text-muted-foreground hover:bg-muted hover:text-foreground"
-                >
-                  Plan <ChevronRight className="size-3" />
-                </Link>
-                <Link
-                  href={`/board?team=${selectedTeam.slug}`}
-                  className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[11px] text-muted-foreground hover:bg-muted hover:text-foreground"
-                >
-                  Board <ChevronRight className="size-3" />
-                </Link>
-                <Link
-                  href={`/capacity?team=${selectedTeam.slug}`}
-                  className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[11px] text-muted-foreground hover:bg-muted hover:text-foreground"
-                >
-                  Capacity <ChevronRight className="size-3" />
-                </Link>
-              </div>
             </div>
+
+            <TeamPlanningNavigation key={selectedTeam.slug} teamSlug={selectedTeam.slug} />
 
             {selectedTeam.charter && (
               <p className="text-xs text-muted-foreground">{selectedTeam.charter}</p>
@@ -127,7 +110,9 @@ export default function TeamsPage() {
               <h4 className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 Members
               </h4>
-              <MemberList members={members ?? []} />
+              {canCreate && user && !membersLoading && members && !members.some(m => m.userId === user.id) && <button disabled={addMember.isPending} onClick={() => addMember.mutate(user.id)} className="mb-3 rounded-md border px-3 py-2 text-xs disabled:opacity-50">{addMember.isPending ? "Adding…" : "Add myself to this team"}</button>}
+              {[membersError, addMember.error].filter(Boolean).map((err, i) => <p key={i} role="alert" className="mb-2 text-sm text-red-400">{err instanceof Error ? err.message : "Failed to update membership"}</p>)}
+              {membersLoading ? <div className="h-16 animate-pulse rounded-md bg-muted" /> : <MemberList members={members ?? []} />}
             </div>
           </div>
         )}

@@ -13,12 +13,14 @@ import { AddMemberSchema } from "../../../../../src/lib/tpmos/schemas/team";
 interface Env { DB: D1Database; ENV: string; }
 
 export const onRequestGet: PagesFunction<Env> = async (context) => {
+  const { user, userTeamIds } = getAuth(context);
   const teamId = context.params.teamId as string;
   const team = await getTeamById(context.env.DB, teamId);
-  if (!team) {
+  if (!team || team.org_id !== user.orgId) {
     return Response.json({ error: { code: "NOT_FOUND", message: "Team not found" } }, { status: 404 });
   }
 
+  if (!can(user, "viewTeam", { teamId }, { userTeamIds })) return Response.json({ error: { code: "FORBIDDEN" } }, { status: 403 });
   const members = await listTeamMembers(context.env.DB, teamId);
   return Response.json(members.map(toMemberResponse));
 };
@@ -28,7 +30,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   const teamId = context.params.teamId as string;
 
   const team = await getTeamById(context.env.DB, teamId);
-  if (!team) {
+  if (!team || team.org_id !== user.orgId) {
     return Response.json({ error: { code: "NOT_FOUND", message: "Team not found" } }, { status: 404 });
   }
 
@@ -46,7 +48,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
   // Verify target user exists
   const targetUser = await getUserById(context.env.DB, body.data.userId);
-  if (!targetUser) {
+  if (!targetUser || targetUser.org_id !== user.orgId) {
     return Response.json({ error: { code: "NOT_FOUND", message: "User not found" } }, { status: 404 });
   }
 
@@ -69,7 +71,7 @@ export const onRequestDelete: PagesFunction<Env> = async (context) => {
   }
 
   const team = await getTeamById(context.env.DB, teamId);
-  if (!team) {
+  if (!team || team.org_id !== user.orgId) {
     return Response.json({ error: { code: "NOT_FOUND", message: "Team not found" } }, { status: 404 });
   }
 

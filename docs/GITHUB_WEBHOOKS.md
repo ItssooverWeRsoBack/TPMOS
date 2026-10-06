@@ -156,3 +156,11 @@ Tests exercise the actual SQLite migrations and SQL, signed body validation, iss
 The [current TPMOS architecture walkthrough](https://torfinn.xyz/architectures/tpmos) includes the active receiver, a PEDALS systems design workflow, request/response JSON examples, a generated input JSON Schema, and a 17-stop code tour in execution order. [Open the code tour](https://torfinn.xyz/architectures/tpmos#tpmos-webhook-code-tour), or [download its Markdown version](https://torfinn.xyz/demos/tpmos/webhook-code-tour.md) for a presentation. The links are pinned to the reviewed source revision.
 
 [Download the minimal issue JSON](https://torfinn.xyz/demos/tpmos/github-issue-payload.json) and [input JSON Schema](https://torfinn.xyz/demos/tpmos/github-issue.schema.json). These examples contain no secrets, real signatures or unrelated sender metadata. For the full original request, use GitHub Settings → Webhooks → Recent deliveries → Request payload with repository administrator access.
+
+## Selecting the correct quarter and team membership
+
+Teams, Plan, Board and Capacity show an explicit **Planning quarter** selector and preserve it in navigation links. A team with exactly one open webhook target defaults to that target; choose another quarter explicitly to view its separate history or capacity. The selector identifies GitHub-connected quarters, saved capacity and issue counts.
+
+Capacity is per team **and quarter**. A capacity plan saved in 2026 Q2 is not capacity for Webhook Practice. The app identifies the other quarter without moving your saved values. Enter capacity for the target quarter if you want that plan to use it.
+
+**Planned headcount** is a capacity assumption, not a count of registered account memberships. An authorized administrator/TPM can select the team and click **Add myself to this team** using the existing signed-in account. No second email address is required. Registered members are optional for capacity and GitHub ingestion.

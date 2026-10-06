@@ -9,7 +9,8 @@ import { ConsensusHeatmap } from "@/components/tpmos/epic/consensus-heatmap";
 import { PlannerBoard } from "@/components/tpmos/planner/planner-board";
 import { CapacityBar } from "@/components/tpmos/capacity/capacity-bar";
 import { useEpics, useCreateEpic, useCastVote } from "@/lib/tpmos/hooks/use-epics";
-import { useQuarters } from "@/lib/tpmos/hooks/use-quarters";
+import { usePlanningContext } from "@/lib/tpmos/hooks/use-planning-context";
+import { TeamPlanningNavigation } from "@/components/tpmos/teams/planning-navigation";
 import { useCurrentUser } from "@/lib/tpmos/hooks/use-current-user";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import * as capacityApi from "@/lib/tpmos/api/capacity";
@@ -32,11 +33,8 @@ function PlanPageInner() {
   const teamSlug = searchParams.get("team");
   const quarterId = searchParams.get("quarter");
   const { data: user } = useCurrentUser();
-  const { data: quarters } = useQuarters();
+  const { data: planningContext, effectiveQuarterId, currentQuarter, isLoading: isQuarterLoading } = usePlanningContext(teamSlug, quarterId);
   const qc = useQueryClient();
-  const activeQuarter = quarters?.find((q) => q.state === "active");
-  const effectiveQuarterId = quarterId ?? activeQuarter?.id ?? null;
-  const currentQuarter = quarters?.find((q) => q.id === effectiveQuarterId);
   const isReadOnly = currentQuarter?.state === "closed";
 
   const { data: epics, isLoading } = useEpics(teamSlug, effectiveQuarterId);
@@ -93,7 +91,7 @@ function PlanPageInner() {
   const committedWeeks = epics?.reduce((sum, e) => sum + e.driCommittedWeeks, 0) ?? 0;
   const votingEpic = epics?.find((e) => e.id === votingEpicId);
   const myVote = votingEpic?.votes.find((v) => v.userId === user?.id);
-  const teamId = epics?.[0]?.teamId;
+  const teamId = planningContext?.teamId;
 
   return (
     <div className="space-y-6">
@@ -125,6 +123,8 @@ function PlanPageInner() {
         }
       />
 
+      <TeamPlanningNavigation teamSlug={teamSlug} quarterId={quarterId} navigateOnChange />
+
       {/* Capacity bar */}
       {capacity && (
         <CapacityBar committedWeeks={committedWeeks} availableWeeks={availableWeeks} />
@@ -155,7 +155,7 @@ function PlanPageInner() {
       )}
 
       {/* Planner board with drag-and-drop */}
-      {isLoading && (
+      {(isLoading || isQuarterLoading) && (
         <div className="space-y-2">
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-14 animate-pulse rounded-lg border border-border bg-card" />

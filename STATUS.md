@@ -104,3 +104,15 @@ Historical Phase 3 completion above does not establish live provider readiness. 
 **Validation:** 215 tests, typecheck and production build pass; lint has no errors (existing warnings remain). Commit 99d3b5e deployed successfully through Cloudflare Pages, with successful GitHub CI. The hosted input accepts owner/repository or a full GitHub URL and shows readable field errors; the existing practice connection remains active.
 **Companion:** The current systems design workflow, JSON examples/schema, optional signed client and 17-stop pinned code tour are published at https://torfinn.xyz/architectures/tpmos.
 **Next action:** Use the existing practice repository and plan to exercise issue events; no reconnection is required.
+
+
+## M12.4 — Preserve team planning quarter and clarify membership
+
+- [x] Explicit same-organization planning context identifies webhook target, epic counts and saved capacity per quarter.
+- [x] Teams/Plan/Board/Capacity select the same quarter and preserve it in navigation.
+- [x] An isolated connected quarter is the default; explicit/history selections are respected.
+- [x] Existing capacity is preserved, with an explanation when it belongs to another quarter.
+- [x] Add myself membership action, clearer empty state and planned-headcount label.
+- [x] Membership endpoint scopes both team and target account to the user organization.
+
+**Active task:** Validate and deploy M12.4.

@@ -22,7 +22,7 @@ export function MemberList({ members, canRemove, onRemove }: MemberListProps) {
   if (members.length === 0) {
     return (
       <div className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-        No members yet. Add team members to get started.
+        No registered members yet. Membership is separate from planned headcount; capacity and GitHub imports work without registered members.
       </div>
     );
   }

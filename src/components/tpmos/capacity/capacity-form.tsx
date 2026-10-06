@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { computeAvailableWeeks, memberCountToWeeks } from "@/lib/tpmos/domain/capacity";
 import { CapacityBar } from "./capacity-bar";
 import type { UpsertCapacityInput } from "@/lib/tpmos/schemas/capacity";
@@ -70,13 +70,13 @@ export function CapacityForm({ initial, onSubmit, isLoading }: CapacityFormProps
       {/* Inputs */}
       <div className="grid gap-4 sm:grid-cols-2">
         <NumberField
-          label="Team members"
+          label="Planned headcount"
           value={memberCount}
           onChange={setMemberCount}
           min={0}
           max={50}
           suffix="people"
-          helpText={`× 13 weeks = ${totalMemberWeeks} member-weeks`}
+          helpText={`× 13 weeks = ${totalMemberWeeks} member-weeks. Planning headcount does not add registered team members.`}
         />
         <NumberField
           label="Vacation"

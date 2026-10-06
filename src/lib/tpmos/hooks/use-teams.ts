@@ -44,3 +44,10 @@ export function useArchiveTeam() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["teams"] }),
   });
 }
+
+export function useAddTeamMember(teamId: string | null) {
+  const qc = useQueryClient();
+  return useMutation({ mutationFn: (userId: string) => teamsApi.addMember(teamId!, { userId, teamRole: "member" }),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["teamMembers", teamId] }); qc.invalidateQueries({ queryKey: ["teams"] }); qc.invalidateQueries({ queryKey: ["currentUser"] }); },
+  });
+}

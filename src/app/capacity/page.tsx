@@ -5,7 +5,8 @@ import { useSearchParams } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { PageHeader } from "@/components/tpmos/shared/page-header";
 import { CapacityForm } from "@/components/tpmos/capacity/capacity-form";
-import { useQuarters } from "@/lib/tpmos/hooks/use-quarters";
+import { usePlanningContext } from "@/lib/tpmos/hooks/use-planning-context";
+import { TeamPlanningNavigation } from "@/components/tpmos/teams/planning-navigation";
 import * as capacityApi from "@/lib/tpmos/api/capacity";
 import type { UpsertCapacityInput } from "@/lib/tpmos/schemas/capacity";
 import { AlertCircle } from "lucide-react";
@@ -14,12 +15,9 @@ function CapacityPageInner() {
   const searchParams = useSearchParams();
   const teamSlug = searchParams.get("team");
   const quarterId = searchParams.get("quarter");
-  const { data: quarters } = useQuarters();
+  const { effectiveQuarterId, isLoading: isQuarterLoading } = usePlanningContext(teamSlug, quarterId);
   const qc = useQueryClient();
 
-  // Default to active quarter if not specified
-  const activeQuarter = quarters?.find((q) => q.state === "active");
-  const effectiveQuarterId = quarterId ?? activeQuarter?.id;
 
   const { data: plan, isLoading } = useQuery({
     queryKey: ["capacity", teamSlug, effectiveQuarterId],
@@ -32,6 +30,7 @@ function CapacityPageInner() {
       capacityApi.upsertCapacityPlan(teamSlug!, effectiveQuarterId!, input),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["capacity", teamSlug, effectiveQuarterId] });
+      qc.invalidateQueries({ queryKey: ["planning-context", teamSlug] });
     },
   });
 
@@ -47,12 +46,13 @@ function CapacityPageInner() {
     );
   }
 
-  if (!effectiveQuarterId) {
+  if (!effectiveQuarterId && !isQuarterLoading) {
     return (
       <div className="space-y-6">
         <PageHeader title="Capacity Plan" description={`Team: ${teamSlug}`} />
+        <TeamPlanningNavigation teamSlug={teamSlug} quarterId={quarterId} navigateOnChange />
         <div className="rounded-lg border border-border bg-card p-6 text-sm text-muted-foreground">
-          No active quarter found. Create a quarter first.
+          No available quarter selected. Create or select a quarter first.
         </div>
       </div>
     );
@@ -65,10 +65,13 @@ function CapacityPageInner() {
         description={`Team: ${teamSlug}`}
       />
 
-      {isLoading ? (
+      <TeamPlanningNavigation teamSlug={teamSlug} quarterId={quarterId} navigateOnChange />
+
+      {(isLoading || isQuarterLoading) ? (
         <div className="h-64 animate-pulse rounded-lg border border-border bg-card" />
       ) : (
         <CapacityForm
+          key={`${teamSlug}:${effectiveQuarterId}`}
           initial={plan ?? undefined}
           onSubmit={(input) => mutation.mutate(input)}
           isLoading={mutation.isPending}

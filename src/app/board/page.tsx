@@ -1,12 +1,13 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { PageHeader } from "@/components/tpmos/shared/page-header";
 import { ProgressBar } from "@/components/tpmos/progress/progress-bar";
-import { StatusPill, StatusSelect } from "@/components/tpmos/epic/status-control";
+import { StatusSelect } from "@/components/tpmos/epic/status-control";
 import { useEpics } from "@/lib/tpmos/hooks/use-epics";
-import { useQuarters } from "@/lib/tpmos/hooks/use-quarters";
+import { usePlanningContext } from "@/lib/tpmos/hooks/use-planning-context";
+import { TeamPlanningNavigation } from "@/components/tpmos/teams/planning-navigation";
 import { computeProgress } from "@/lib/tpmos/domain/progress";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as epicsApi from "@/lib/tpmos/api/epics";
@@ -17,11 +18,8 @@ function BoardPageInner() {
   const searchParams = useSearchParams();
   const teamSlug = searchParams.get("team");
   const quarterId = searchParams.get("quarter");
-  const { data: quarters } = useQuarters();
+  const { effectiveQuarterId, currentQuarter, isLoading: isQuarterLoading } = usePlanningContext(teamSlug, quarterId);
   const qc = useQueryClient();
-  const activeQuarter = quarters?.find((q) => q.state === "active");
-  const effectiveQuarterId = quarterId ?? activeQuarter?.id ?? null;
-  const currentQuarter = quarters?.find((q) => q.id === effectiveQuarterId);
 
   const { data: epics, isLoading } = useEpics(teamSlug, effectiveQuarterId);
 
@@ -62,9 +60,11 @@ function BoardPageInner() {
     <div className="space-y-6">
       <PageHeader title="Status Board" description={`Team: ${teamSlug}`} />
 
+      <TeamPlanningNavigation teamSlug={teamSlug} quarterId={quarterId} navigateOnChange />
+
       {progress && <ProgressBar progress={progress} />}
 
-      {isLoading && (
+      {(isLoading || isQuarterLoading) && (
         <div className="space-y-2">
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-14 animate-pulse rounded-lg border border-border bg-card" />
