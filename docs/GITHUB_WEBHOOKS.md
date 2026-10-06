@@ -31,6 +31,12 @@ sequenceDiagram
 
 The receiver is `https://tpmos-github-webhooks.torfinnolsen.workers.dev/github/CONNECTION_ID`. Copy the exact URL shown in TPMOS. Do not use the human-login-protected TPMOS URL as GitHub’s webhook destination.
 
+## Preconnected practice repository
+
+[ItssooverWeRsoBack/webhook-practice](https://github.com/ItssooverWeRsoBack/webhook-practice) is connected to the **Webhook Practice** team and quarter. [Open the practice plan](https://tpmos.torfinn.xyz/plan/?team=webhook-practice&quarter=default%3Awebhook-practice) after signing in. [Issue #1](https://github.com/ItssooverWeRsoBack/webhook-practice/issues/1) was used to verify real opened/edited/closed/reopened deliveries and redelivery without duplicate epic writes. You can use that issue or create another.
+
+The webhook is already configured on this repository; you do not need its secret to practice issue events. To administer it, use repository owner/admin access. Creating issues requires normal GitHub permissions.
+
 ## What updates
 
 | GitHub event/action | TPMOS behavior |
@@ -118,7 +124,7 @@ The initial receiver shares the existing TPMOS D1 database and runs separately f
 
 ### Cost
 
-This design uses Workers and D1 features available on Cloudflare’s Free plan. The current [Workers Free allowance](https://developers.cloudflare.com/workers/platform/pricing/) includes 100,000 requests/day; [D1 Free](https://developers.cloudflare.com/d1/platform/pricing/) includes 5 million rows read/day, 100,000 rows written/day and 5 GB total storage. These limits are shared across the account, not dedicated to this receiver. Small practice workloads fit comfortably, but this is not an unlimited-free guarantee. Existing paid-plan accounts retain their billing/overage rules; no paid plan is enabled by this setup.
+This design uses Workers and D1 features available on Cloudflare’s Free plan. The current [Workers Free allowance](https://developers.cloudflare.com/workers/platform/pricing/) includes 100,000 requests/day; [D1 Free](https://developers.cloudflare.com/d1/platform/pricing/) includes 5 million rows read/day, 100,000 rows written/day and 5 GB total storage. These limits are shared across the account, not dedicated to this receiver. Small practice workloads fit comfortably, but this is not an unlimited-free guarantee. Existing paid-plan accounts retain their billing/overage rules; no paid plan is enabled by this setup. The connected deployment credential cannot read account subscriptions, so this release does not certify a $0 bill. Confirm **Workers Free** in your Cloudflare billing dashboard if you require hard free-plan quotas rather than paid-plan overages.
 
 ### Developer verification
 

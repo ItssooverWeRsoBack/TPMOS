@@ -71,7 +71,7 @@ P3-M10 JWKS JWT verification
 **Deployment:** Migrations 0008 and 0009 were applied to hosted D1 on 2026-10-05. Validation: 202 tests pass, typecheck passes, lint has no errors, production export passes, and 26 local HTTP requests / 36 collection assertions pass. Hosted deployment: commit 39f3bd8 deployed to Cloudflare Pages production (4c9ced74-1835-458f-95dc-0a31f9b5e1f3).
 **Next 3 actions:** Use hosted demos with an approved administrator account; collect walkthrough feedback; consider live provider delivery only under a new explicit decision.
 
-Historical Phase 3 completion above does not establish live provider readiness. DEC-0016 supersedes live integration work; current application test/sync routes run fixtures only. Existing provider adapters remain available for source review and mock tests. Production auth still trusts the Access identity header and has a decode-only fallback; this release does not change the deployment's authentication requirements.
+Historical Phase 3 completion above does not establish live provider readiness. DEC-0016 supersedes live integration work; current application test/sync routes run fixtures only. Existing provider adapters remain available for source review and mock tests. At the M12.1 snapshot, production auth still trusted the Access identity header and had a decode-only fallback; M12.2 below removes those production fallbacks.
 
 **Live checks:** Hosted /admin/connectors/ serves the new UI; custom-domain requests redirect to Access. Unauthenticated API requests return 401; production /dev/login returns 404. No signed-in production demo mutations were run from this session. The primary user path is https://tpmos.torfinn.xyz/admin/connectors/ and the companion guide is https://torfinn.xyz/architectures/tpmos.
 
@@ -86,5 +86,8 @@ Historical Phase 3 completion above does not establish live provider readiness. 
 - [x] Dedicated docs/GITHUB_WEBHOOKS.md linked from the main README.
 - [x] 212 unit/integration tests pass, including real SQLite transactions.
 
-**Active task:** M12.2 deployment and a real GitHub practice delivery.
-**Next 3 actions:** Deploy migration/receiver/secrets and Pages; connect a dedicated practice repository; verify a real issue lifecycle and record deployment evidence.
+**Active task:** M12.2 complete — hosted GitHub webhooks and README-linked usage guide published.
+**Deployment:** Migration 0010 applied; separate tpmos-github-webhooks Worker deployed with shared secret; Pages commit f4bc147 deployed. Practice repository ItssooverWeRsoBack/webhook-practice is connected to the separate Webhook Practice team/quarter. GitHub ping/open/edit/close/reopen deliveries update the same epic; replay returns 200 without advancing its version.
+**Validation:** 212 tests, typecheck, production build, receiver bundle and actual Miniflare D1 transaction checks pass. GitHub CI succeeds. Hosted pages.dev rejects header-only identity with 401; production dev login is 404.
+**Cost:** No paid subscription, queue, scheduler or AI call was enabled. Workers/D1 features support Free quotas; current credential cannot read subscriptions, so account billing must be checked in the Cloudflare dashboard before asserting a guaranteed $0 bill.
+**Next 3 actions:** Practice through the hosted repository/plan; add further repository connections as needed; confirm account Workers Free status in the billing dashboard.
