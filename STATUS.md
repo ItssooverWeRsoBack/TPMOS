@@ -115,4 +115,6 @@ Historical Phase 3 completion above does not establish live provider readiness. 
 - [x] Add myself membership action, clearer empty state and planned-headcount label.
 - [x] Membership endpoint scopes both team and target account to the user organization.
 
-**Active task:** Validate and deploy M12.4.
+**Active task:** M12.4 complete — team planning context and existing-account membership controls published.
+**Validation:** 222 tests, typecheck and production export pass; lint has no errors. The regression reproduces saved capacity in the active quarter with GitHub epics in a different target quarter. Commit e32be36 passed GitHub CI. No capacity values, quarter assignments or membership records were moved/created by this release.
+**User guidance:** Select Webhook Practice to see the imported issue. The existing 22-week capacity is saved in 2026 Q2; select that quarter to review it or create capacity for Webhook Practice explicitly. Add myself registers the existing account independently of planned headcount.
